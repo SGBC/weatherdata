@@ -50,3 +50,22 @@ def get_from_api(url):
 
 
 
+# Convert historic json LANTMET data to lst of observations.
+# @params data: Dictionary to be saved.
+#         params: optional, parameters to be included. Default is all.
+# @returns Dictionary containing list of measurements.
+def LANTMET_to_lists(data):
+
+    list_data = {'startTime': None, 'endTime': None}
+    list_data['startTime'] = data[0]['timeMeasured']
+    list_data['endTime'] = data[-1]['timeMeasured']
+
+    # Init keys.
+    for e in data:
+        list_data[e['elementMeasurementTypeId']] = []
+
+    # Add observations to list.
+    for e in data:
+        list_data[e['elementMeasurementTypeId']].append(e['value'])
+
+    return list_data
