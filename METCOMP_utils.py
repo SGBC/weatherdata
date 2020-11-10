@@ -136,4 +136,25 @@ def LANTMET_to_lists2(data):
 
 
 
+# Convert historic (last 24 hours) json MESAN data to lists.
+# Do not save tmin and tmax that are given once a day.
+# @params data: Dictionary to be saved.
+#         params: optional, parameters to be included. Default is all.
+# @returns Dictionary containing list of measurements.
+def MESAN_to_lists(data):
 
+    list_data = {'startTime': None, 'endTime': None}
+    list_data['startTime'] = data['timeSeries'][-1]['validTime']
+    list_data['endTime'] = data['timeSeries'][0]['validTime']
+
+    # Init keys.
+    for e in data['timeSeries'][0]['parameters']:
+        list_data[e['name']] = []
+
+    # Add observations to list in reverse order (oldest to newest).
+    for i in range(len(data['timeSeries'])-1, 0, -1):
+        for e in data['timeSeries'][i]['parameters']:
+            if e['name'] in list_data:
+                list_data[e['name']].append(e['values'][0])
+
+    return list_data
