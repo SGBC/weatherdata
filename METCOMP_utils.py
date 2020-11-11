@@ -254,3 +254,17 @@ def get_LANTMET_data(startDate,endDate,startTime,endTime):
     return new_data
 
 
+
+# Find all unique timestamps in recorded MESAN data.
+# @params data: data to be checked.
+# @returns list of timestamps.
+def get_timestamps(data):
+    timestamps = {}
+    for s in data:
+        for ts in data[s]['frames']:
+            timestamps[ts] = None
+
+    timestamps = list(timestamps.keys())
+
+    print(timestamps)
+
