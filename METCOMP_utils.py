@@ -158,3 +158,99 @@ def MESAN_to_lists(data):
                 list_data[e['name']].append(e['values'][0])
 
     return list_data
+
+# Get historic json LANTMET data for ONE STATION from API between start date and end date.
+# @params stationID: weatherStationID in LANTMET API
+#         start_date: as a string, ex. '2020-01-02'  
+#         end_date: as a string.
+# @returns dictionary with parameters for the specified station between given dates
+def get_LANTMET_data_station(stationId,startDate,endDate,startTime=None,endTime=None): 
+    
+    url_lantmet = 'https://www.ffe.slu.se/lm/json/DownloadJS.cfm?weatherStationID='+stationId+'&startDate='+startDate+'&endDate='+endDate+'&startTime='+startTime+'&endTime='+endTime
+    data_lantmet = get_from_api(url_lantmet) 
+    
+    return data_lantmet
+
+# Create a new dictionary for historic json LANTMET for ONE STATION between start date/time and end date/time.
+# OBS. The format of the dictionary is the same as for sampled MESAN data.
+# @params station: station data as given from the API (returned form get_LANTMET_data_station)
+#         startDate: as a string, ex. '2020-01-02'. 
+#         endDate: as a string.
+#         startTime: as a string, ex. '08'
+#         endTime: as a string.
+# @returns dictionary with parameters for the specified station between given dates (on the same form as sampled MESAN data).
+def LANTMET_dict(station,startDate,endDate,startTime,endTime):
+    # Initializes station dictionary.
+    station_id = str(station['weatherStationId'])
+    new_data[station_id] = {}
+
+    # Add keys and station data.
+    new_data[station_id]['name'] = station['weatherStationName']
+    new_data[station_id]['municId'] = station['MunicID']
+    new_data[station_id]['regionId'] = station['RegionID']
+    new_data[station_id]['realLong'] = station['wgs84e']
+    new_data[station_id]['realLat'] = station['wgs84N']
+
+    # Initializes frames dictionary.
+    new_data[station_id]['frames'] = {}
+
+    # Get parameter data.
+    param_data = get_LANTMET_data_station(station_id,startDate,endDate,startTime,endTime)
+
+    # Collect all timestamps and sort from earliest to latest.
+    timestamps = {}
+    for e in param_data:
+        # Convert time format from '+01:00' to 'Z'.
+        timestamps[station['timeMeasured'].split('+')[0] + 'Z'] = None
+
+    timestamps = list(timestamps.keys())
+
+    # Need list of datetime representations of timestamps in order to compare chronologically and sort.
+    dt_timestamps = []
+    for ts in timestamps:
+        dt_timestamps.append(ts_to_datetime(ts))
+
+    # Sort string timestamps based on how dt_timestamps would be sorted.
+    timestamps = sort_by_list(timestamps, dt_timestamps)
+
+    # Now we have sorted string timestamps. Loop over these and find corresponding measurements.
+    for ts in timestamps:
+
+        new_data[station_id]['frames'][ts] = {'parameters': []}
+
+        for e in param_data:
+
+            # Skip observations not made on this timestamp.
+            e_timestamp = e['timeMeasured'].split('+')[0] + 'Z'
+            if e_timestamp != ts:
+                continue
+
+            # Make temporary dictionary. This will become the elements under 'parameters'.
+            tmp_dict = {}
+            tmp_dict['name'] = e['elementMeasurementTypeId']
+            tmp_dict['logIntervalId'] = e['logIntervalId']
+            tmp_dict['values'] = [e['value']]
+            new_data[station_id]['frames'][ts]['parameters'].append(tmp_dict)
+            
+    return new_data[station_id]
+
+
+# Get historic json LANTMET data for ALL stations from API between start date/time and end date/time.
+# @params startDate: as a string, ex. '2020-01-02'.
+#         endDate: as a string.
+#         startTime: as a string, ex. '08'
+#         endTime: as a string.
+# @returns dictionary with data for ALL stations for specified dates.
+def get_LANTMET_data(startDate,endDate,startTime,endTime):
+    stations_url = 'https://www.ffe.slu.se/lm/json/DownloadJS.cfm?'
+
+    # Get list of all stations.
+    stations = get_from_api(stations_url)
+
+    new_data = {}
+    for station in stations:
+        new_data[station['weatherStationId']] = LANTMET_dict(station,startDate,endDate,startTime,endTime)
+        print_dict(new_data)
+    return new_data
+
+
