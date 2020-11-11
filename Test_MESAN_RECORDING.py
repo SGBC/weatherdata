@@ -18,8 +18,48 @@ def get_timestamps(data):
 
 
 
+# Checks formatted data if all hours have been logged for all stations within data.
+# @params data: Data to be checked.
+# @returns bool: True if all hours are logged for each stations. Otherwise false.
+def check_if_complete(data):
+    for s in data:
+
+        # Create list of timestamps as reference.
+        timestamps_ref = []
+        for i in range(0, 23):
+            hour_str = ''
+            if i < 10:
+                hour_str = '0' + str(i)
+            else:
+                hour_str = str(i)
+            tmp_str = '2020-11-11T' + hour_str + ':00:00Z'
+            timestamps_ref.append(tmp_str)
+
+        # Find all timestamps.
+        timestamps = list(data[s]['frames'].keys())
+
+        print(timestamps_ref)
+        print(timestamps)
+        quit()
+
+
+        # Check if all timestamps exist.
+
+
+
+directory = 'MESAN_RECORDED/'
+filename= 'MESAN_2020-11-10.txt'
+data = load_dict(directory + filename)
+
+print(data['149']['frames'].keys())
+
+if check_if_complete(data):
+    print('File is complete.')
+else:
+    print('File is not complete.')
+
 # CHECK THAT NEW TIMESTAMPS EXIST
-dir = 'MESAN_RECORDED/'
+directory = 'MESAN_RECORDED/'
 
 files = []
 for r, d, f in os.walk(dir):
@@ -44,7 +84,5 @@ timestamps = get_timestamps(data)
 
 
 # CHECK THAT OLD FILES ARE UNCHANGED
-
-
 
 

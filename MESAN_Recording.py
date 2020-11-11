@@ -105,11 +105,12 @@ def split_data(comb_data):
 LANTMET_URL = 'https://www.ffe.slu.se/lm/json/DownloadJS.cfm'
 SMHI_URL = 'https://opendata-download-metanalys.smhi.se/api/category/mesan1g/version/2/geotype/point/lon/{lon}/lat/{lat}/data.json'
 
+# Make a true copy of stations.
 stations = get_from_api(LANTMET_URL)
-
 
 # Collect current data.
 data = {}
+missing_stations = []
 for station in stations:
 
     # ONLY FOR DEV PURPOSES!!!!
@@ -123,7 +124,8 @@ for station in stations:
     MESAN = get_from_api(SMHI_URL.replace('{lon}', str(real_lon)).replace('{lat}', str(real_lat)))
     if not MESAN:
         # Deal with nonexistent data.
-        pass
+        missing_stations.append(str(station['weatherStationId']))
+        continue
     elif True:
         # Data might be incomplete?
         pass
@@ -151,9 +153,17 @@ for station in stations:
 
     #print_dict(data)
     #print(data['149']['frames'].keys())
-    print('Collected MESAN for station: ' + str(station['weatherStationId']) + '.')
+    print('MESAN_RECORDING: Collected MESAN data for station: ' + str(station['weatherStationId']) + '.')
 
-print('Size: ' + str(data.__sizeof__()) + ' bytes.')
+#print('Size: ' + str(data.__sizeof__()) + ' bytes.')
+
+if not missing_stations:
+    print('MESAN_RECORDING: All stations found. (' + str(len(stations)) + ' stations.)')
+else:
+    print('MESAN_RECORDING: No data found for the following stations:')
+    for e in missing_stations:
+        print(e)
+
 
 
 #save_dict(data, 'MESAN_Test_Dict5.txt')
@@ -194,8 +204,21 @@ if not files:
 # If files overlap, old file will get additional data while a new
 # file is written containing contents for the following day.
 else:
+
+    # Revised solution:
+
+    # Shit solution. REVISE!!!!
+    # Find dates in data.
+    data_dates = {} # Dates within fetched data.
+    dt_timestamps = []
+    for s in data:
+        for ts in data[s]['frames']:
+            data_dates[ts.split('T')[0]] = None
+    data_dates = list(data_dates.keys())
+
+    # Find latest recorded date.
     print('MESAN_RECORDING: Found previous files.')
-    days = []
+    days = [] # Dates of recorded files. Complete and not complete.
     dt_days = []
     for file in files:
         day = file.split('_')[1].split('.')[0]
@@ -204,19 +227,57 @@ else:
         dt_days.append(datetime.strptime(day, '%Y-%m-%d'))
 
     days = sort_by_list(days, dt_days)
-    latest_file = 'MESAN_' + days[-1] + '.txt'
-    print(days)
 
-    print('                 Merging with ' + latest_file)
-    old_data = load_dict(dir + latest_file)
-    #print_dict(old_data)
-    comb_data = combine_data(old_data, data)
-    res_data = split_data(comb_data)
-    for d in res_data:
-        if d != days[-1]:
-            continue
+
+
+    # Check if latest recorded file and new data overlap.
+    # Warning: As is now, a previous completed file will still be written to. Consider flag completed
+    # files in the unlikely event that the data overwritten is new data. This should not be the
+    # case but is something to consider. THIS IS CONFIRMED TO BE THE CASE!!!!!
+    if days[-1] in data_dates:
+        latest_file = 'MESAN_' + days[-1] + '.txt'
+        print('                 Merging with ' + latest_file)
+        old_data = load_dict(dir + latest_file)
+        comb_data = combine_data(old_data, data)
+        res_data = split_data(comb_data)
+    else:
+        print('                 New data does not overlap with previous files.')
+        res_data = split_data(data)
+    # Only write files for new dates.
+    for d in data_dates:
         print('                 Writing MESAN_' + d + '.txt.')
         save_dict(res_data[d], dir + 'MESAN_' + d + '.txt')
+
+    quit()
+
+
+
+
+
+    # !!!REDUNDANT!!!
+    #print('MESAN_RECORDING: Found previous files.')
+    #days = []
+    #dt_days = []
+    #for file in files:
+    #    day = file.split('_')[1].split('.')[0]
+    #    days.append(day)
+    #
+    #    dt_days.append(datetime.strptime(day, '%Y-%m-%d'))
+    #
+    #days = sort_by_list(days, dt_days)
+    #latest_file = 'MESAN_' + days[-1] + '.txt'
+    #print(days)
+    #
+    #print('                 Merging with ' + latest_file)
+    #old_data = load_dict(dir + latest_file)
+    #print_dict(old_data)
+    #comb_data = combine_data(old_data, data)
+    #res_data = split_data(comb_data)
+    #for d in res_data:
+    #    if d != days[-1]:
+    #        continue
+    #    print('                 Writing MESAN_' + d + '.txt.')
+    #    save_dict(res_data[d], dir + 'MESAN_' + d + '.txt')
 
 
 
