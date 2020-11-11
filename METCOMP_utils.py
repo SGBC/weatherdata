@@ -260,7 +260,6 @@ def get_LANTMET_data(startDate,endDate,startTime,endTime):
 # @returns list of timestamps.
 def get_timestamps(data):
     timestamps = {}
-    dt_timestamps = []
     for s in data:
         for ts in data[s]['frames']:
             timestamps[ts] = None
