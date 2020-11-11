@@ -158,3 +158,17 @@ def MESAN_to_lists(data):
                 list_data[e['name']].append(e['values'][0])
 
     return list_data
+
+# Get historic json LANTMET data for ONE STATION from API between start date and end date.
+# @params stationID: weatherStationID in LANTMET API
+#         start_date: as a string, ex. '2020-01-02'  
+#         end_date: as a string.
+# @returns dictionary with parameters for the specified station between given dates
+def get_LANTMET_data_station(stationId,startDate,endDate,startTime=None,endTime=None): 
+    
+    url_lantmet = 'https://www.ffe.slu.se/lm/json/DownloadJS.cfm?weatherStationID='+stationId+'&startDate='+startDate+'&endDate='+endDate+'&startTime='+startTime+'&endTime='+endTime
+    data_lantmet = get_from_api(url_lantmet) 
+    
+    return data_lantmet
+
+
