@@ -31,7 +31,7 @@ def save_dict(data, filename):
 # @params filename: Name of file containing JSON data.
 # @returns data: Dict with JSON data.
 def load_dict(filename):
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         data = json.load(f)
     return data
 
