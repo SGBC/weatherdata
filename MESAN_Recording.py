@@ -181,11 +181,11 @@ else:
 #data = load_dict('MESAN_Test_Dict4.txt')
 
 
-dir = 'MESAN_RECORDED/'
+directory = 'MESAN_RECORDED/'
 
 # Check dir for saved files
 files = []
-for r, d, f in os.walk(dir):
+for r, d, f in os.walk(directory):
     for file in f:
         if '.txt' in file:
             files.append(file)
@@ -197,87 +197,47 @@ if not files:
     res_data = split_data(data)
     for d in res_data:
         print('                 Writing MESAN_' + d + '.txt.')
-        save_dict(res_data[d], dir + 'MESAN_' + d + '.txt')
+        save_dict(res_data[d], directory + 'MESAN_' + d + '.txt')
 
 
 # Find latest file.
 # If files overlap, old file will get additional data while a new
 # file is written containing contents for the following day.
 else:
+    print('MESAN_RECORDING: Found previous files.')
+    # Third save logic attempt.
+    # Check if MESAN_X exists for first date in data.
+    # If so, load MESAN_X into old data and combine.
 
-    # Revised solution:
-
-    # Shit solution. REVISE!!!!
-    # Find dates in data.
-    data_dates = {} # Dates within fetched data.
-    dt_timestamps = []
+    # Find all dates in data and sort chronologically.
+    data_dates = {}  # Dates within fetched data.
+    dt_data_dates = []
     for s in data:
         for ts in data[s]['frames']:
             data_dates[ts.split('T')[0]] = None
     data_dates = list(data_dates.keys())
+    for d in data_dates:
+        dt_data_dates.append(datetime.strptime(d, '%Y-%m-%d'))
+    data_dates = sort_by_list(data_dates, dt_data_dates)
 
-    # Find latest recorded date.
-    print('MESAN_RECORDING: Found previous files.')
-    days = [] # Dates of recorded files. Complete and not complete.
-    dt_days = []
-    for file in files:
-        day = file.split('_')[1].split('.')[0]
-        days.append(day)
-
-        dt_days.append(datetime.strptime(day, '%Y-%m-%d'))
-
-    days = sort_by_list(days, dt_days)
-
-
-
-    # Check if latest recorded file and new data overlap.
-    # Warning: As is now, a previous completed file will still be written to. Consider flag completed
-    # files in the unlikely event that the data overwritten is new data. This should not be the
-    # case but is something to consider. THIS IS CONFIRMED TO BE THE CASE!!!!!
-    if days[-1] in data_dates:
-        latest_file = 'MESAN_' + days[-1] + '.txt'
-        print('                 Merging with ' + latest_file)
-        old_data = load_dict(dir + latest_file)
+    # Check if file containing oldest data exists. If so load it. Otherwise, create two new files.
+    merge_file = 'MESAN_' + data_dates[0] + '.txt'
+    if merge_file in files:
+        print('                 Merging with ' + merge_file)
+        old_data = load_dict(directory + merge_file)
         comb_data = combine_data(old_data, data)
         res_data = split_data(comb_data)
+        for d in res_data:
+            print('                 Writing MESAN_' + d + '.txt.')
+            save_dict(res_data[d], directory + 'MESAN_' + d + '.txt')
+    # Should enter this if sampling did not occur for 24h.
     else:
-        print('                 New data does not overlap with previous files.')
+        print('                 No file found for merging.')
         res_data = split_data(data)
-    # Only write files for new dates.
-    for d in data_dates:
-        print('                 Writing MESAN_' + d + '.txt.')
-        save_dict(res_data[d], dir + 'MESAN_' + d + '.txt')
+        for d in res_data:
+            print('                 Writing MESAN_' + d + '.txt.')
+            save_dict(res_data[d], directory + 'MESAN_' + d + '.txt')
 
-    quit()
-
-
-
-
-
-    # !!!REDUNDANT!!!
-    #print('MESAN_RECORDING: Found previous files.')
-    #days = []
-    #dt_days = []
-    #for file in files:
-    #    day = file.split('_')[1].split('.')[0]
-    #    days.append(day)
-    #
-    #    dt_days.append(datetime.strptime(day, '%Y-%m-%d'))
-    #
-    #days = sort_by_list(days, dt_days)
-    #latest_file = 'MESAN_' + days[-1] + '.txt'
-    #print(days)
-    #
-    #print('                 Merging with ' + latest_file)
-    #old_data = load_dict(dir + latest_file)
-    #print_dict(old_data)
-    #comb_data = combine_data(old_data, data)
-    #res_data = split_data(comb_data)
-    #for d in res_data:
-    #    if d != days[-1]:
-    #        continue
-    #    print('                 Writing MESAN_' + d + '.txt.')
-    #    save_dict(res_data[d], dir + 'MESAN_' + d + '.txt')
 
 
 
