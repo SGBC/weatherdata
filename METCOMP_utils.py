@@ -181,6 +181,7 @@ def get_LANTMET_data_station(stationId,startDate,endDate,startTime=None,endTime=
 # @returns dictionary with parameters for the specified station between given dates (on the same form as sampled MESAN data).
 def LANTMET_dict(station,startDate,endDate,startTime,endTime):
     # Initializes station dictionary.
+    new_data = {}
     station_id = str(station['weatherStationId'])
     new_data[station_id] = {}
 
@@ -201,7 +202,7 @@ def LANTMET_dict(station,startDate,endDate,startTime,endTime):
     timestamps = {}
     for e in param_data:
         # Convert time format from '+01:00' to 'Z'.
-        timestamps[station['timeMeasured'].split('+')[0] + 'Z'] = None
+        timestamps[e['timeMeasured'].split('+')[0] + 'Z'] = None
 
     timestamps = list(timestamps.keys())
 
@@ -247,11 +248,12 @@ def get_LANTMET_data(startDate,endDate,startTime,endTime):
     # Get list of all stations.
     stations = get_from_api(stations_url)
 
-    new_data = {}
+    new_data_stations = {}
     for station in stations:
-        new_data[station['weatherStationId']] = LANTMET_dict(station,startDate,endDate,startTime,endTime)
-        print_dict(new_data)
-    return new_data
+        new_data_stations[station['weatherStationId']] = LANTMET_dict(station,startDate,endDate,startTime,endTime)
+        # Remove this printing later
+        print_dict(new_data_stations)
+    return new_data_stations
 
 
 
