@@ -1,6 +1,12 @@
+# This script contains a collection of useful functions.
+
+
+
+
 import json
 import requests
 from datetime import datetime
+
 
 
 
@@ -11,8 +17,8 @@ def print_dict(data):
     print(json.dumps(data, indent=4, sort_keys=False))
 
 
-
-
+    
+    
 # Saves a dictionary to a file
 # @params data: Dictionary to be saved.
 #         filename: Name of saved file.
@@ -159,6 +165,9 @@ def MESAN_to_lists(data):
 
     return list_data
 
+
+
+
 # Get historic json LANTMET data for ONE STATION from API between start date and end date.
 # @params stationID: weatherStationID in LANTMET API
 #         start_date: as a string, ex. '2020-01-02'  
@@ -170,6 +179,9 @@ def get_LANTMET_data_station(stationId,startDate,endDate,startTime=None,endTime=
     data_lantmet = get_from_api(url_lantmet) 
     
     return data_lantmet
+
+
+
 
 # Create a new dictionary for historic json LANTMET for ONE STATION between start date/time and end date/time.
 # OBS. The format of the dictionary is the same as for sampled MESAN data.
@@ -234,6 +246,8 @@ def LANTMET_dict(station,startDate,endDate,startTime,endTime):
             new_data[station_id]['frames'][ts]['parameters'].append(tmp_dict)
             
     return new_data[station_id]
+
+
 
 
 # Get historic json LANTMET data for ALL stations from API between start date/time and end date/time.
