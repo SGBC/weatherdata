@@ -169,7 +169,7 @@ def MESAN_to_lists(data):
 
 
 # Get historic json LANTMET data for ONE STATION from API between start date and end date.
-# @params stationID: weatherStationID in LANTMET API
+# @params stationID: weatherStationID in LANTMET API as a string, ex. '35004'
 #         start_date: as a string, ex. '2020-01-02'  
 #         end_date: as a string.
 #         startTime: as a string, ex. '08'
