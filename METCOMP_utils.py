@@ -16,7 +16,7 @@ import pandas as pd
 #               type = False -> LANTMET
 # @returns comb_df: concatenated dataframe containing all csv data
 #                   chronologically. None if a file was not found.
-def load_CSV(stationId, type, start_date, end_date):
+def read_CSV(stationId, type, start_date, end_date):
     
     if type:
         station_dir = 'MESAN_CSV/' + stationId + '/'
@@ -25,7 +25,7 @@ def load_CSV(stationId, type, start_date, end_date):
     
     # Check if dir exists.
     if not os.path.isdir(station_dir):
-        print('load_CSV() >>> No directory: ' + station_dir)
+        print('read_CSV() >>> No directory: ' + station_dir)
     
     # Loop over days
     current_date = start_date
@@ -41,7 +41,7 @@ def load_CSV(stationId, type, start_date, end_date):
         try:
             frames.append(pd.read_csv(station_dir + current_file))
         except IOError as e:
-            print('load_CSV() >>> File not found. (' + current_file + ')')
+            print('read_CSV() >>> File not found. (' + current_file + ')')
             return None
         
         current_date = current_date + datetime.timedelta(days=1)
