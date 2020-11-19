@@ -162,11 +162,11 @@ def save_LANTMET(stationId, df, startDate, endDate):
         os.mkdir(csv_dir)      
     
     # Create station folder if it not exists.      
-    if os.path.isdir(csv_dir + '/'+ str(stationId) + '/'):
+    if os.path.isdir(csv_dir + '/'+ stationId + '/'):
         pass
     else:
-        print('Creating ' + csv_dir + '/' + str(stationId) + '/' + 'directory.')
-        os.mkdir(csv_dir + '/' + str(stationId) + '/')
+        print('Creating ' + csv_dir + '/' + stationId + '/' + 'directory.')
+        os.mkdir(csv_dir + '/' + stationId + '/')
         
     currentDate = startDate
     for i in range(0,(endDate - startDate + datetime.timedelta(days=1)).days):
@@ -176,5 +176,5 @@ def save_LANTMET(stationId, df, startDate, endDate):
         
         # Save data into .csv.
         print('Saving ' + 'LANTMET_' + str(currentDate) + '.csv')
-        df_temp.to_csv(csv_dir + '/' + str(stationId) + '/' + 'LANTMET_' + str(currentDate) + '.csv', index=False)
+        df_temp.to_csv(csv_dir + '/' + stationId + '/' + 'LANTMET_' + str(currentDate) + '.csv', index=False)
         currentDate = currentDate + datetime.timedelta(days=1)
