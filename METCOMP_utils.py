@@ -11,7 +11,7 @@ import pandas as pd
 #         start_date: date object. Includes this date when reading.
 #                     example: datetime.date(2020, 9, 1)
 #         end_date: date object. Includes this date when reading.
-#         folder: determines whether to load MESAN (SMHI) or LANTMET data.
+#         folder: determines which folder to get data from (MESAN_CSV or LANTMET_CSV).
 #                 folder = True -> MESAN
 #                 folder = False -> LANTMET
 #                 Can also be a string.
