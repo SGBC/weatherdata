@@ -140,3 +140,41 @@ def get_LANTMET(id, start_date, end_date):
         
     res_df = pd.DataFrame(sorted_data)
     return res_df
+
+
+
+
+# Saving a data frame into CSV files (one for each day). 
+# @params stationId: station id as a string.
+#                    example: '35004'
+#         df: data frame as returned from function get_LANTMET. 
+#         start_date: date object. OBS: Includes this date when reading.
+#                     example: datetime.date(2020, 9, 1)
+#         end_date: date object. OBS: Includes this date when reading.
+def save_LANTMET(stationId, df, startDate, endDate):
+    csv_dir = 'LANTMET_CSV'
+    
+    # Create directory for LANTMET .csv files.
+    if os.path.isdir(csv_dir):
+        print(csv_dir + ' exists')
+    else:
+        print('Creating ' + csv_dir)
+        os.mkdir(csv_dir)      
+    
+    # Create station folder if it not exists.      
+    if os.path.isdir(csv_dir + '/'+ str(stationId) + '/'):
+        pass
+    else:
+        print('Creating ' + csv_dir + '/' + str(stationId) + '/' + 'directory.')
+        os.mkdir(csv_dir + '/' + str(stationId) + '/')
+        
+    currentDate = startDate
+    for i in range(0,(endDate - startDate + datetime.timedelta(days=1)).days):
+        
+        # Split out one day from the data frame.
+        df_temp = df[df['Timestamp'].str.contains(str(currentDate))]
+        
+        # Save data into .csv.
+        print('Saving ' + 'LANTMET_' + str(currentDate) + '.csv')
+        df_temp.to_csv(csv_dir + '/' + str(stationId) + '/' + 'LANTMET_' + str(currentDate) + '.csv', index=False)
+        currentDate = currentDate + datetime.timedelta(days=1)
