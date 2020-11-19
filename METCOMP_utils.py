@@ -11,14 +11,32 @@ import pandas as pd
 #         start_date: date object. Includes this date when reading.
 #                     example: datetime.date(2020, 9, 1)
 #         end_date: date object. Includes this date when reading.
-#         type: determines whether to load MESAN (SMHI) or LANTMET data.
-#               type = True -> MESAN
-#               type = False -> LANTMET
+#         folder: determines which folder to get data from (MESAN_CSV or LANTMET_CSV).
+#                 folder = True -> MESAN
+#                 folder = False -> LANTMET
+#                 Can also be a string.
+#                 example: folder = 'MESAN' or 'LANTMET'
 # @returns comb_df: concatenated dataframe containing all csv data
 #                   chronologically. None if a file was not found.
-def read_CSV(stationId, type, start_date, end_date):
+def read_CSV(stationId, folder, start_date, end_date):
     
-    if type:
+    # Used if folder is a string to translate to boolean.
+    trans_dict = {'MESAN_CSV': True,
+                  'MESAN': True,
+                  'LANTMET_CSV': False,
+                  'LANTMET': False}
+    
+    # If folder is a string, check if folder is a key in trans_dict.
+    if isinstance(folder, str):
+        try:
+            # folder is assigned a boolean value corresponding to data source.
+            folder = trans_dict[folder]
+        except KeyError:
+            # User provided key not existing in trans_dict.
+            print('Key \'' + folder + '\' can not be used to specify data source.')
+            return None
+    
+    if folder:
         station_dir = 'MESAN_CSV/' + stationId + '/'
     else:
         station_dir = 'LANTMET_CSV/' + stationId + '/'
@@ -32,7 +50,7 @@ def read_CSV(stationId, type, start_date, end_date):
     frames = []
     for n in range(0, (end_date - start_date + datetime.timedelta(days=1)).days):
         date_str = current_date.strftime('%Y-%m-%d')
-        if type:
+        if folder:
             current_file = 'MESAN_' + date_str + '.csv'
         else:
             current_file = 'LANTMET_' + date_str + '.csv'
