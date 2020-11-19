@@ -159,8 +159,7 @@ def save_LANTMET(stationId, df, startDate, endDate):
         print(csv_dir + ' exists')
     else:
         print('Creating ' + csv_dir)
-        os.mkdir(csv_dir)
-        
+        os.mkdir(csv_dir)      
     
     # Create station folder if it not exists.      
     if os.path.isdir(csv_dir + '/'+ str(stationId) + '/'):
