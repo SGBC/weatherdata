@@ -247,7 +247,7 @@ def save_LANTMET(stationId, df, startDate, endDate):
         
         # Save data into .csv.
         print('Saving ' + 'LANTMET_' + str(currentDate) + '.csv')
-        df_temp.to_csv(csv_dir + '/' + stationId + '/' + 'LANTMET_' + str(currentDate) + '.csv', index=False)
+        df_temp.to_csv(csv_dir + '/' + stationId + '/' + 'LANTMET_' + str(currentDate) + '.csv', sep = ';', index=False)
         currentDate = currentDate + datetime.timedelta(days=1)
         
         
