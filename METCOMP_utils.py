@@ -249,3 +249,88 @@ def save_LANTMET(stationId, df, startDate, endDate):
         print('Saving ' + 'LANTMET_' + str(currentDate) + '.csv')
         df_temp.to_csv(csv_dir + '/' + stationId + '/' + 'LANTMET_' + str(currentDate) + '.csv', index=False)
         currentDate = currentDate + datetime.timedelta(days=1)
+        
+        
+        
+
+# Splitting dataframe into bins corresponding to months 
+# @params df: dataframe as returned from read_CSV.
+# @returns dictionary with keys for each month containing all rows of the corresponding month.
+# {1: df_january, 2: df_february, ..., 12: df_december}
+def divide_months(df):
+    months = {}
+    for month in range(1, 13):
+        
+        # Get hour string as two character string.
+        month_str = ''
+        if month < 10:
+            month_str = '0' + str(month)
+        else:
+            month_str = str(month)
+        months[month] = df[df['Timestamp'].str.contains('-' + month_str + '-')]
+        
+    return months
+
+
+
+
+# Splitting dataframe into bins corresponding to weeks 
+# @params df: dataframe as returned from read_CSV.
+# @returns dictionary with keys for each week containing all rows of the corresponding week.
+# {1: df_week1, 2: df_week2, ..., 52: df_week52}
+def divide_weeks(df):
+    
+    # Initialize variables.
+    week = df.iloc[0]['Timestamp'].split('T')[0]
+    week = datetime.datetime.strptime(week, '%Y-%m-%d').isocalendar()[1]
+    prev_week = week
+    weeks = {}
+    start_index = 0
+    end_index = 0
+    
+    # Loop over every row.
+    for index, df_row in df.iterrows():
+        
+        # Find week number.
+        current_dt = df_row['Timestamp'].split('T')[0]
+        current_dt = datetime.datetime.strptime(current_dt, '%Y-%m-%d')
+        week = current_dt.isocalendar()[1]
+        
+        # If change in current week, slice all rows appertaining to previous week and try to concatenate with previous dataframes.
+        if not week == prev_week:       
+            end_index = index
+            try:
+                # If previous data exists, concatenate dataframes
+                weeks[prev_week] = pd.concat([weeks[prev_week], df.iloc[start_index:end_index]])
+            except KeyError:
+                # If no previous data exists, initialize key and concatenate to None object.
+                weeks[prev_week] = None
+                weeks[prev_week] = pd.concat([weeks[prev_week], df.iloc[start_index:end_index]])
+            start_index = end_index
+        
+        prev_week = week
+    
+    return weeks
+
+
+
+
+# Splitting dataframe into bins corresponding to hours 
+# @params df: dataframe as returned from read_CSV.
+# @returns dictionary with keys for each hour containing all rows of the corresponding hour.
+# {0: hour0, 1: df_hour1, ..., 23: df_hour23}
+def divide_hours(df):
+    
+    hours = {}
+    
+    for hour in range(0, 24):
+        
+        # Get hour string as two character string.
+        hour_str = ''
+        if hour < 10:
+            hour_str = '0' + str(hour)
+        else:
+            hour_str = str(hour)
+        hours[hour] = df[df['Timestamp'].str.contains('T' + hour_str)]
+        
+    return hours
