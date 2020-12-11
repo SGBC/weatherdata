@@ -57,7 +57,7 @@ def read_CSV(stationId, folder, start_date, end_date):
         
         # Try to read file, if file not found, return a None object.
         try:
-            frames.append(pd.read_csv(station_dir + current_file))
+            frames.append(pd.read_csv(station_dir + current_file, sep=';'))
         except IOError as e:
             print('read_CSV() >>> File not found. (' + current_file + ')')
             return None
