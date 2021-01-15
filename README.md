@@ -1,6 +1,6 @@
 # Gigacow Weatherdata Project
 This project will integrate data from SLU Lantmet and SMHI for data analysis.
-For further details concerning the scripts and how to execute them, please check the documenation page in the wiki.
+For further details concerning the scripts and how to execute them, please check the documentation page in the wiki.[documentation page in the wiki](https://github.com/SGBC/weatherdata/wiki/Documentation)
 
 
 # Repo structure
