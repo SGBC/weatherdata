@@ -5,4 +5,11 @@ This project aims to explore the impact caused by weather on the milk yields of 
 
 # Code explanation...
 
-Lorem Ipsum
+## milkAndWeather.ipynb 
+1. Removes all events with no total yield
+2. removes cows named "Unknown"
+3. Sums all milkings for each cow in a single day and calculates number of milking events
+4. Adds the specified weather data
+5. Outputs one or multiple csv files with the combined data
+
+Note that the file "AllMilkings.csv" is required to run this, as well as the relevant daily weather data output by weatherPreProcessing.ipynb
