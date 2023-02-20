@@ -27,3 +27,17 @@ If you choose to run this script on non existing data you will have a bad time.
 5. Outputs one or multiple csv files with the combined data
 
 Note that the file "AllMilkings.csv" is required to run this, as well as the relevant daily weather data output by weatherPreProcessing.ipynb
+
+## Records_Distribution.ipynb 
+Explore the distribution of records for each farm.
+
+## Special_Index.ipynb
+Explore the special cows with special indexes, which were born in one farm but live in another farm.
+
+## Curve_Fitting_farm.ipynb
+Curve cleaning, curve fitting and the exploration about the corrrelations between deviations and weather factors for each farm.
+
+## Curve_Fitting_cow.ipynb
+Curve cleaning, curve fitting and the exploration about the corrrelations between deviations and weather factors for each cow.
+
+
