@@ -3,7 +3,8 @@
 This project aims to explore the impact caused by weather on the milk yields of dairy cows. For this goal, we create a data set by combining weather data from the Swedish Meteorological and Hydrological Institute and milking data from the Gigacow project at SLU. With the combined data set, we explore the correlations and regression between a number of weather factors and milk yield. The results show that there appears to be some negative correlation between temperature/THI and the milk yield of dairy cows.
 
 
-# Code explanation...
+# Scripts for missingess, correlations, and FFT are being worked on and will be uploaded soon
+
 
 ## weatherPreProcessing.ipynb 
 1. Reads all mesan csv files created by Grib2CSV.ipynb within the date range specified below and puts them in a pandas dataframe
