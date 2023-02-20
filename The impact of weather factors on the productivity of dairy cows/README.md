@@ -21,6 +21,9 @@ If you choose to run this script on non existing data you will have a bad time.
 ## weathersStats.ipynb
 Calculates a few statistics for the weather data and generates a few plots.
 
+## THIplots.ipynb
+Generates plots that compare temperature and THI
+
 ## milkAndWeather.ipynb 
 1. Removes all events with no total yield
 2. removes cows named "Unknown"
