@@ -38,6 +38,9 @@ Note that the file "AllMilkings.csv" is required to run this, as well as the rel
 ## categorical.ipynb
 Plots the mean daily milk yield for a number of temperature and THI-ranges
 
+## simpRegs.ipynb
+Generates regression plots and calculates slopes for a number of weather parameters
+
 ## fftXcorrs.ipynb
 1. Does some basic imputation of the milking data
 2. separates the high and low frequency components of the milk yield
