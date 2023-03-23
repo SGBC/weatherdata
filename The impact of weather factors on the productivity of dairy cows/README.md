@@ -41,6 +41,9 @@ Note that the file "AllMilkings.csv" is required to run this, as well as the rel
 3. Outputs "AllMilkingsDaily_Weather_Filtered.csv", containing the high and low frequency components.
 4. Calculates and prints some correlation and regression stuff.
 
+## fftpres.ipynb
+Loads "AllMilkingsDaily_Weather_Filtered.csv" and show the filtered curves for one random cow
+
 ## Records_Distribution.ipynb 
 Explore the distribution of records for each farm.
 
