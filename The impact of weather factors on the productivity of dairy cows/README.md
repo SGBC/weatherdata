@@ -35,6 +35,9 @@ Generates plots that compare temperature and THI
 
 Note that the file "AllMilkings.csv" is required to run this, as well as the relevant daily weather data output by weatherPreProcessing.ipynb
 
+## categorical.ipynb
+Plots the mean daily milk yield for a number of temperature and THI-ranges
+
 ## fftXcorrs.ipynb
 1. Does some basic imputation of the milking data
 2. separates the high and low frequency components of the milk yield
