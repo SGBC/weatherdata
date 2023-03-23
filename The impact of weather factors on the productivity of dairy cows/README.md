@@ -41,6 +41,9 @@ Plots the mean daily milk yield for a number of temperature and THI-ranges
 ## simpRegs.ipynb
 Generates regression plots and calculates slopes for a number of weather parameters
 
+## sortedByCorrelation.ipynb
+Plots the variation of milk yields for each farm, sorted by the Pearson correlation between milk yield and temperature
+
 ## autocorrelation.ipynb
 plots the autoregression for weather factors and milk yield
 
