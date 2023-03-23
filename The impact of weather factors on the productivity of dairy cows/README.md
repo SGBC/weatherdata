@@ -37,6 +37,12 @@ Generates plots that compare temperature and THI
 
 Note that the file "AllMilkings.csv" is required to run this, as well as the relevant daily weather data output by weatherPreProcessing.ipynb
 
+## fftXcorrs.ipynb
+1. Does some basic imputation of the milking data
+2. separates the high and low frequency components of the milk yield
+3. Outputs "AllMilkingsDaily_Weather_Filtered.csv", containing the high and low frequency components.
+4. Calculates and prints some correlation and regression stuff.
+
 ## Records_Distribution.ipynb 
 Explore the distribution of records for each farm.
 
