@@ -38,6 +38,9 @@ Note that the file "AllMilkings.csv" is required to run this, as well as the rel
 ## categorical.ipynb
 Plots the mean daily milk yield for a number of temperature and THI-ranges
 
+## SummerSplitCorrs.ipynb
+Calculates correlation values and generates regression plots for top/bottom half/tenth/percent for summer as well as the whole year
+
 ## simpRegs.ipynb
 Generates regression plots and calculates slopes for a number of weather parameters
 
